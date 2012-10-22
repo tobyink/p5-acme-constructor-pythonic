@@ -1,0 +1,19 @@
+# This file contains general metadata about the project.
+
+@prefix : <http://usefulinc.com/ns/doap#>.
+
+`Acme-Constructor-Pythonic`
+	:programming-language "Perl" ;
+	:shortdesc            "import Python-style constructor functions";
+	:homepage             <https://metacpan.org/release/Acme-Constructor-Pythonic>;
+	:download-page        <https://metacpan.org/release/Acme-Constructor-Pythonic>;
+	:bug-database         <http://rt.cpan.org/Dist/Display.html?Queue=Acme-Constructor-Pythonic>;
+	:repository           [ a :HgRepository; :browse <https://bitbucket.org/tobyink/p5-acme-constructor-pythonic> ];
+	:created              2012-10-21;
+	:license              <http://dev.perl.org/licenses/>;
+	:maintainer           cpan:TOBYINK;
+	:developer            cpan:TOBYINK.
+
+<http://dev.perl.org/licenses/>
+	dc:title  "the same terms as the perl 5 programming language system itself".
+

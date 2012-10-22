@@ -1,0 +1,9 @@
+# This file provides instructions for packaging.
+
+`Acme-Constructor-Pythonic`
+	perl_version_from m`Acme::Constructor::Pythonic`;
+	version_from      m`Acme::Constructor::Pythonic`;
+	readme_from       m`Acme::Constructor::Pythonic`;
+	test_requires     p`Test::More 0.61` ;
+	.
+

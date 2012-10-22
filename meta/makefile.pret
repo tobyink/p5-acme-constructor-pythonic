@@ -4,6 +4,9 @@
 	perl_version_from m`Acme::Constructor::Pythonic`;
 	version_from      m`Acme::Constructor::Pythonic`;
 	readme_from       m`Acme::Constructor::Pythonic`;
-	test_requires     p`Test::More 0.61` ;
+	test_requires     p`Test::More 0.61`;
+	requires          p`Data::OptList`;
+	requires          p`Sub::Install`;
+	requires          p`Module::Runtime`;
 	.
 

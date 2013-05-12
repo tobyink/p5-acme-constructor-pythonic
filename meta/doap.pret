@@ -8,7 +8,7 @@
 	:homepage             <https://metacpan.org/release/Acme-Constructor-Pythonic>;
 	:download-page        <https://metacpan.org/release/Acme-Constructor-Pythonic>;
 	:bug-database         <http://rt.cpan.org/Dist/Display.html?Queue=Acme-Constructor-Pythonic>;
-	:repository           [ a :HgRepository; :browse <https://bitbucket.org/tobyink/p5-acme-constructor-pythonic> ];
+	:repository           [ a :GitRepository; :browse <https://github.com/tobyink/p5-acme-constructor-pythonic> ];
 	:created              2012-10-21;
 	:license              <http://dev.perl.org/licenses/>;
 	:maintainer           cpan:TOBYINK;

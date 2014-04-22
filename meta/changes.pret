@@ -4,3 +4,15 @@
 	issued  2012-10-22;
 	label   "Initial release".
 
+`Acme-Constructor-Pythonic 0.002 cpan:TOBYINK`
+	issued  2014-04-22;
+	label   "Almost total rewrite";
+	changeset [
+		item "Use Exporter::Tiny instead of Sub::Install+Data::OptList."^^Update;
+		item "Exported subs should run slightly faster as they are compiled from strings rather than being closures."^^Change;
+		item "Exported subs will have a more consistent refaddr."^^Change;
+		item "Exceptions thrown in the wrapped constructor will report slightly more useful line numbers and so on in their stack traces."^^Change;
+		item "use Dist::Inkt."^^Packaging;
+		item "Test exported subs using Sub::Identify if it's available."^^Tests;
+	].
+

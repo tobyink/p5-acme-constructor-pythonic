@@ -8,7 +8,7 @@ package Acme::Constructor::Pythonic;
 
 BEGIN {
 	$Acme::Constructor::Pythonic::AUTHORITY = 'cpan:TOBYINK';
-	$Acme::Constructor::Pythonic::VERSION   = '0.001';
+	$Acme::Constructor::Pythonic::VERSION   = '0.002';
 	@Acme::Constructor::Pythonic::ISA       = qw( Exporter::Tiny );
 }
 

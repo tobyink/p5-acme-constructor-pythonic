@@ -1,12 +1,12 @@
 # This file provides instructions for packaging.
 
+@prefix : <http://ontologi.es/doap-deps#> .
+
 `Acme-Constructor-Pythonic`
-	perl_version_from m`Acme::Constructor::Pythonic`;
-	version_from      m`Acme::Constructor::Pythonic`;
-	readme_from       m`Acme::Constructor::Pythonic`;
-	test_requires     p`Test::More 0.61`;
-	requires          p`Data::OptList`;
-	requires          p`Sub::Install`;
-	requires          p`Module::Runtime`;
+	:test-requirement    [ :on "Test::More 0.61"^^:CpanId ];
+	:test-recommendation [ :on "Moose 2.0600"^^:CpanId ];
+	:test-recommendation [ :on "Sub::Identify"^^:CpanId ];
+	:runtime-requirement [ :on "Module::Runtime"^^:CpanId ];
+	:runtime-requirement [ :on "Exporter::Tiny"^^:CpanId ].
 	.
 

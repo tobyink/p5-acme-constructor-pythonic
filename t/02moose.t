@@ -3,7 +3,8 @@ use warnings;
 use Test::More;
 
 BEGIN {
-	eval 'require Moose; 1' or plan skip_all => 'need Moose';
+	eval { require Moose }
+		or plan skip_all => 'need Moose';
 	plan tests => 4;
 }
 

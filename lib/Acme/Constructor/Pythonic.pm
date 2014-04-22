@@ -1,46 +1,87 @@
-package Acme::Constructor::Pythonic;
-
 use 5.006;
 use strict;
 use warnings;
 
+use Exporter::Tiny ();
+
+package Acme::Constructor::Pythonic;
+
 BEGIN {
 	$Acme::Constructor::Pythonic::AUTHORITY = 'cpan:TOBYINK';
 	$Acme::Constructor::Pythonic::VERSION   = '0.001';
+	@Acme::Constructor::Pythonic::ISA       = qw( Exporter::Tiny );
 }
-
-use Data::OptList qw(mkopt);
-use Sub::Install qw(install_sub);
-use Module::Runtime qw(use_module);
 
 sub import
 {
-	shift;
-	my $caller = caller;
+	my $me      = shift;
+	my $globals = ref($_[0]) eq 'HASH' ? shift() : {};
 	
-	for my $arg (@{ mkopt(\@_) })
+	unless (ref($globals->{into}))
 	{
-		my ($module, $opts) = @$arg;
-		$opts->{class}       = $module unless defined $opts->{class};
-		$opts->{constructor} = 'new'   unless defined $opts->{constructor};
-		$opts->{alias}       = $module unless defined $opts->{alias};
-		
-		if (!ref $opts->{alias} and $opts->{alias} =~ /::(\w+)$/) {
-			$opts->{alias} = $1;
-		}
-		
-		install_sub
-		{
-			into => $caller,
-			as   => $opts->{alias},
-			code => sub {
-				use_module($module) unless $opts->{no_require};
-				my $method = $opts->{class}->can($opts->{constructor});
-				unshift @_, $opts->{class};
-				goto $method;
-			}
-		}
+		my @caller = caller;
+		$globals->{into_file} = $caller[1] unless exists $globals->{into_file};
+		$globals->{into_line} = $caller[2] unless exists $globals->{into_line};
 	}
+	
+	unshift @_, $me, $globals;
+	goto \&Exporter::Tiny::import;
+}
+
+my %_CACHE;
+sub _exporter_expand_sub
+{
+	my $me = shift;
+	my ($name, $args, $globals) = @_;
+	
+	# We want to be invisible to Carp
+	$Carp::Internal{$me} = 1;
+	
+	# Process incoming arguments, providing sensible defaults.
+	my $module = $name;
+	my $class  = defined($args->{class})       ? $args->{class}       : $name;
+	my $ctor   = defined($args->{constructor}) ? $args->{constructor} : 'new';
+	my $alias  = defined($args->{alias})       ? $args->{alias}       : $name;
+	my $req    = exists($args->{no_require})   ? !$args->{no_require} : !$globals->{no_require};
+	
+	# Doesn't really make sense to include a package name
+	# as part of the alias. We were just lazy in initializing
+	# the default above.
+	$alias = $1 if $alias =~ /::(\w+)\z/;
+	
+	# We really only need Module::Runtime if $req is on.
+	# $req is on by default, but in imagined case where
+	# the caller has been diligent enough to no_require
+	# every import, we can do them a favour and not
+	# needlessly load Module::Runtime into memory.
+	if ($req) { require Module::Runtime }
+	
+	# Compile a custom coderef instead of closing
+	# over variables.
+	my $code = join("\n",
+		sprintf('package %s;', $me),
+		defined($globals->{into_line}) && defined($globals->{into_file})
+			? sprintf('#line %d "%s"', @$globals{qw(into_line into_file)})
+			: (),
+		sprintf('sub {'),
+		$req
+			? sprintf('Module::Runtime::use_module(qq[%s]);', quotemeta($module))
+			: (),
+		sprintf('qq[%s]->%s(@_);', quotemeta($class), $ctor),
+		sprintf('}'),
+	);
+	
+	# Orcish maneuver
+	# This is not done for reasons of efficiency, but
+	# rather because if we're exporting the exact same
+	# sub twice, we want it to have the same refaddr.
+	# This reduces the chances of 'redefine' warnings,
+	# and conflicts (if our subs have been imported into
+	# roles).
+	my $coderef = ($_CACHE{"$class\034$ctor\034$req"} ||= eval($code))
+		or die("Something went horribly wrong!\n$code\n\n");
+	
+	return ($alias => $coderef);
 }
 
 1;
@@ -142,7 +183,7 @@ Toby Inkster E<lt>tobyink@cpan.orgE<gt>.
 
 =head1 COPYRIGHT AND LICENCE
 
-This software is copyright (c) 2012 by Toby Inkster.
+This software is copyright (c) 2012, 2014 by Toby Inkster.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

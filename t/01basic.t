@@ -1,7 +1,5 @@
 use Test::More tests => 1;
 
-diag "Running on Perl $] $^O";
-
 {
 	package Local::Foo;
 	sub create { bless [] => shift };

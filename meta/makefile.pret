@@ -8,5 +8,4 @@
 	:test-recommendation [ :on "Sub::Identify"^^:CpanId ];
 	:runtime-requirement [ :on "Module::Runtime"^^:CpanId ];
 	:runtime-requirement [ :on "Exporter::Tiny"^^:CpanId ].
-	.
 
